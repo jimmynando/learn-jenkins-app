@@ -13,6 +13,7 @@ pipeline {
       steps {
         sh '''          
           ls -la
+          rm -rf node_modules && package-lock.json
           node --version
           npm --version
           npm install
