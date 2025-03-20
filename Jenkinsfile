@@ -23,41 +23,45 @@ pipeline {
       }
     }
 
-    stage("Test") {
-      agent {
-        docker {
-          image 'node:18-alpine'
-          args '-u root:root' // needed root access
-          reuseNode true
+    stage("Tests") {
+      parallel {
+        stage("Unit tests") {
+          agent {
+            docker {
+              image 'node:18-alpine'
+              args '-u root:root' // needed root access
+              reuseNode true
+            }
+          }
+
+          steps {
+            sh '''
+              test -f ./build/index.html
+              npm run test
+            '''
+          }
+        }
+
+        stage("E2E") {
+          agent {
+            docker {
+              image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+              args '-u root:root' // needed root access
+              reuseNode true
+            }
+          }
+
+          steps {
+            sh '''
+              npm i serve
+              node_modules/.bin/serve -s build &
+              sleep 10
+              npx playwright test --reporter=html
+            '''
+          }
         }
       }
-
-      steps {
-        sh '''
-          test -f ./build/index.html
-          npm run test
-        '''
-      }
-    }
-
-    stage("E2E") {
-      agent {
-        docker {
-          image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-          args '-u root:root' // needed root access
-          reuseNode true
-        }
-      }
-
-      steps {
-        sh '''
-          npm i serve
-          node_modules/.bin/serve -s build &
-          sleep 10
-          npx playwright test --reporter=html
-        '''
-      }
-    }
+    }    
   }
 
   post {
