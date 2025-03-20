@@ -44,6 +44,7 @@ pipeline {
       agent {
         docker {
           image 'mcr.microsoft.com/playwright:v1.51.1-noble'
+          args '-u root:root' // needed root access
           reuseNode true
         }
       }
