@@ -10,6 +10,7 @@ pipeline {
           reuseNode true
         }
       }
+
       steps {
         sh '''          
           ls -la
@@ -17,16 +18,24 @@ pipeline {
           node --version
           npm --version
           npm install
-          npm run test
           ls -la
         '''
       }
     }
 
     stage("Test") {
+      agent {
+        docker {
+          image 'node:18-alpine'
+          args '-u root:root' // needed root access
+          reuseNode true
+        }
+      }
+
       steps {
         sh '''
           test -f ./build/index.html
+          npm run test
         '''
       }
     }
