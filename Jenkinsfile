@@ -18,7 +18,7 @@ pipeline {
           npm --version
           npm install
           npm run test
-          test -f ./build/index.htmls
+          test -f ./build/index.html
           ls -la
         '''
       }
