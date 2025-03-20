@@ -6,7 +6,7 @@ pipeline {
       agent {
         docker {
           image 'node:18-alpine'
-          args '-u root:root'
+          args '-u root:root' // needed root access
           reuseNode true
         }
       }
@@ -17,7 +17,6 @@ pipeline {
           node --version
           npm --version
           npm install
-          ls -la
           npm run build
           ls -la
         '''
