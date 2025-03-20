@@ -18,8 +18,15 @@ pipeline {
           npm --version
           npm install
           npm run test
-          test -f ./build/index.html
           ls -la
+        '''
+      }
+    }
+
+    stage("Test") {
+      steps {
+        sh '''
+          test -f ./build/index.html
         '''
       }
     }
