@@ -101,6 +101,15 @@ pipeline {
       }
     }
 
+    stage('Approval') {
+      steps {
+        echo 'Pending approval...'
+        timeout(time: 1, unit: 'MINUTES') {
+          input message: 'Ready to deploy?', ok: 'Yes, I am sure I want to deploy'
+        }
+      }
+    }
+
     stage('Deploy Prod') {
       agent {
         docker {
@@ -108,7 +117,7 @@ pipeline {
           args '-u root:root' // needed root access
           reuseNode true
         }
-      }
+      }      
 
       steps {
         sh '''
