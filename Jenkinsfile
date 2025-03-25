@@ -8,6 +8,11 @@ pipeline {
   }
 
   stages {
+    stage('Docker') {
+      steps {
+        sh 'docker build -t jimmytri0/learning-jenkins-app:latest .'
+      }
+    }
     stage('Build') {
       agent {
         docker {
