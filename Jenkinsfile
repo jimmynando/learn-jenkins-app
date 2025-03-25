@@ -139,26 +139,6 @@ pipeline {
       }
     }
 
-    stage('Deploy Prod') {
-      agent {
-        docker {
-          image 'node:18-alpine'
-          args '-u root:root' // needed root access
-          reuseNode true
-        }
-      }      
-
-      steps {
-        sh '''
-          npm install netlify-cli -g
-          netlify --version
-          echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
-          netlify status
-          netlify deploy --dir=build --prod
-        '''
-      }
-    }
-
     stage("Prod E2E") {
       agent {
         docker {
@@ -174,6 +154,11 @@ pipeline {
 
       steps {
         sh '''
+          npm install netlify-cli -g
+          netlify --version
+          echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
+          netlify status
+          netlify deploy --dir=build --prod
           npx playwright test --reporter=html
         '''
       }
