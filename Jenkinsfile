@@ -90,8 +90,8 @@ pipeline {
     stage("Deploy Staging") {
       agent {
         docker {
-          image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
-          args '-u root:root' // needed root access
+          image 'jimmytri0/learning-jenkins-app'
+          args '-u root:root'
           reuseNode true
         }
       }
@@ -102,7 +102,6 @@ pipeline {
 
       steps {
         sh '''
-          npm install netlify-cli -g
           netlify --version
           echo "Deploying to staging. Site ID: $NETLIFY_SITE_ID"
           netlify status
@@ -131,7 +130,7 @@ pipeline {
     stage("Deploy Prod") {
       agent {
         docker {
-          image 'mcr.microsoft.com/playwright:v1.39.0-jammy'
+          image 'jimmytri0/learning-jenkins-app'
           args '-u root:root' // needed root access
           reuseNode true
         }
@@ -143,7 +142,6 @@ pipeline {
 
       steps {
         sh '''
-          npm install netlify-cli -g
           netlify --version
           echo "Deploying to production. Site ID: $NETLIFY_SITE_ID"
           netlify status
